@@ -7,7 +7,7 @@ const Splash = ({setVisible}) => {
   }, []);
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text>Splash</Text>
     </View>
   );
@@ -15,4 +15,6 @@ const Splash = ({setVisible}) => {
 
 export default Splash;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+});
