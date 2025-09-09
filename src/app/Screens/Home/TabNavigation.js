@@ -14,12 +14,12 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Feather';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import ExploreScreen from './ExploreScreen';
 // Import your screens
 import HomeSrceen from './HomeSrceen';
 import LoginScreen from '../Login/LoginScreen';
 import NotificationScreen from './NotificationScreen';
 import ProfileScreen from './ProfileScreen';
+import ExploreScreen from './ExploreScreen';
 // Placeholder screens with bottom padding to avoid tab bar overlap
 
 // function NotificationScreen() {
