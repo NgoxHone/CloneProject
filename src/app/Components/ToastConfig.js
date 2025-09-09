@@ -1,6 +1,7 @@
 import React from 'react';
 import Toast, {BaseToast} from 'react-native-toast-message';
-import {Dimensions, Platform} from 'react-native';
+import {Dimensions, Image, Platform} from 'react-native';
+import useSafeArea, {getGlobalSafeAreaTop} from '../Hooks/useSafeArea';
 
 // Kiểm tra xem thiết bị có phải là tablet không
 const {width} = Dimensions.get('window');
@@ -11,8 +12,15 @@ const toastConfig = {
   success: props => (
     <BaseToast
       {...props}
-      style={{borderLeftColor: 'green', width: isTablet ? '70%' : '60%'}}
-      contentContainerStyle={{paddingHorizontal: 15}}
+      style={{
+        borderLeftColor: 'green',
+        width: isTablet ? '70%' : '60%',
+        backgroundColor: '#22bb4dff',
+      }}
+      contentContainerStyle={{
+        paddingHorizontal: 15,
+        backgroundColor: '#d0ffddff',
+      }}
       text1Style={{fontSize: isTablet ? 20 : 16, fontWeight: 'bold'}}
       text2Style={{fontSize: isTablet ? 18 : 15}}
     />
@@ -24,6 +32,22 @@ const toastConfig = {
       contentContainerStyle={{paddingHorizontal: 15}}
       text1Style={{fontSize: isTablet ? 20 : 16, fontWeight: 'bold'}}
       text2Style={{fontSize: isTablet ? 18 : 15}}
+      renderLeadingIcon={() => (
+        <Image
+          source={{
+            uri: 'https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg',
+          }}
+          style={{width: 40, height: 40, borderRadius: 20}}
+        />
+      )}
+      renderTrailingIcon={() => (
+        <Image
+          source={{
+            uri: 'https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg',
+          }}
+          style={{width: 40, height: 40, borderRadius: 20}}
+        />
+      )}
     />
   ),
 };
@@ -34,10 +58,10 @@ const showToast = (type, message, message2) => {
     type: type,
     text1: message,
     text2: message2,
-    position: 'bottom',
+    position: 'top',
     visibilityTime: 3000, // Lâu hơn trên tablet
     autoHide: true,
-    bottomOffset: isTablet ? 80 : 50, // Dịch lên cao hơn một chút trên tablet
+    topOffset: 60, // Dịch lên cao hơn một chút trên tablet
     queue: true,
   });
 };

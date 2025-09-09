@@ -3,9 +3,15 @@ import {View, Text, StyleSheet} from 'react-native';
 import TopNavigation from '../../Components/TopNavigation';
 import Global from '../../LocalData/Global';
 import {RootNavigation} from '../../Common/RootNavigation';
+import { useGlobalModal } from '../../Common/GlobalModalContext';
 
-export default function NotificationDetailScreen({route}) {
-  const {notification} = route.params || {};
+export default function NotificationDetailScreen({ route }) {
+  const { showModal } = useGlobalModal();
+  React.useEffect(() => {
+    showModal('Nội dung thông báo');
+  }, []);
+
+  const { notification } = route.params || {};
   if (!notification) {
     return (
       <View style={styles.container}>

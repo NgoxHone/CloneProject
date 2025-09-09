@@ -18,6 +18,7 @@ import HotUpdate from 'react-native-ota-hot-update';
 import {useUpdateVersion} from './src/app/Hooks/useUpdateVersionApp';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {RecoilRoot} from 'recoil';
+import Toast from 'react-native-toast-message';
 
 const {width} = Dimensions.get('window');
 const isSmallScreen = width < 360;
@@ -195,7 +196,10 @@ const App = () => {
     <RecoilRoot>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       {canEnterApp ? (
-        <AppContainer />
+        <>
+          <AppContainer />
+          <Toast />
+        </>
       ) : (
         <ImageBackground
           source={{

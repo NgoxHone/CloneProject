@@ -1,11 +1,19 @@
 import React from 'react';
-import {View, Text, StyleSheet, Button, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  ScrollView,
+  SafeAreaView,
+} from 'react-native';
 import {useForm, Controller} from 'react-hook-form';
 import CustomTextInput from '../../Components/CustomTextInput';
 import Checkbox from '../../Components/Checkbox';
 import Dropdown from '../../Components/Dropdown';
 import DateTimePicker from '../../Components/DateTimePicker';
 import ActionMenu from '../../Components/ActionMenu';
+import Button from '../../Components/Button';
 
 const options = [
   {label: 'Option 1', value: 'option1'},
@@ -28,75 +36,82 @@ export default function ExploreScreen() {
   };
   //   console.log('watch', watch());
   return (
-    <View style={styles.container}>
-      <Controller
-        control={control}
-        name="search"
-        render={({field: {onChange, value}}) => (
-          <CustomTextInput
-            value={value}
-            onChangeText={onChange}
-            placeholder="Tìm kiếm..."
-            isSearch
-            style={{marginBottom: 16}}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="agree"
-        render={({field: {onChange, value}}) => (
-          <Checkbox
-            label="Tôi đồng ý với điều khoản"
-            checked={value}
-            onChange={onChange}
-            style={{marginBottom: 16}}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="dropdown"
-        render={({field: {onChange, value}}) => (
-          <Dropdown
-            options={options}
-            selected={value}
-            onSelect={onChange}
-            placeholder="Chọn một option"
-            style={{marginBottom: 16}}
-            filter
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="date"
-        render={({field: {onChange, value}}) => (
-          <DateTimePicker
-            value={value}
-            onChange={onChange}
-            mode="date"
-            label="Chọn ngày"
-            style={{marginBottom: 16}}
-          />
-        )}
-      />
-      <ActionMenu
-        title="Chọn tác vụ"
-        items={[
-          {label: 'Thẩm xét (CV)', onPress: () => console.log('CV')},
-          {label: 'Xét duyệt (P.TP)', onPress: () => console.log('PTP')},
-          {label: 'Ký duyệt (TP)', onPress: () => console.log('TP')},
-          {
-            label: 'Thu hồi',
-            danger: true,
-            onPress: () => console.log('Thu hồi'),
-          },
-        ]}
-      />
-      <Button title="Gửi" onPress={handleSubmit(onSubmit)} />
-      <Button title="Reset" onPress={() => reset()} color="#888" />
-    </View>
+    <ScrollView style={styles.container}>
+      {/* <SafeAreaView> */}
+        <Controller
+          control={control}
+          name="search"
+          render={({field: {onChange, value}}) => (
+            <CustomTextInput
+              value={value}
+              onChangeText={onChange}
+              placeholder="Tìm kiếm..."
+              isSearch
+              style={{marginBottom: 16}}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="agree"
+          render={({field: {onChange, value}}) => (
+            <Checkbox
+              label="Tôi đồng ý với điều khoản"
+              checked={value}
+              onChange={onChange}
+              style={{marginBottom: 16}}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="dropdown"
+          render={({field: {onChange, value}}) => (
+            <Dropdown
+              options={options}
+              selected={value}
+              onSelect={onChange}
+              placeholder="Chọn một option"
+              style={{marginBottom: 16}}
+              filter
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="date"
+          render={({field: {onChange, value}}) => (
+            <DateTimePicker
+              value={value}
+              onChange={onChange}
+              mode="date"
+              label="Chọn ngày"
+              style={{marginBottom: 16}}
+            />
+          )}
+        />
+        <ActionMenu
+          title="Chọn tác vụ"
+          items={[
+            {label: 'Thẩm xét (CV)', onPress: () => console.log('CV')},
+            {label: 'Xét duyệt (P.TP)', onPress: () => console.log('PTP')},
+            {label: 'Ký duyệt (TP)', onPress: () => console.log('TP')},
+            {
+              label: 'Thu hồi',
+              danger: true,
+              onPress: () => console.log('Thu hồi'),
+            },
+          ]}
+        />
+        <Button title="Gửi" onPress={handleSubmit(onSubmit)} />
+        <Button
+          title="Reset"
+          variant="secondary"
+          onPress={() => reset()}
+          color="#888"
+        />
+      {/* </SafeAreaView> */}
+    </ScrollView>
   );
 }
 

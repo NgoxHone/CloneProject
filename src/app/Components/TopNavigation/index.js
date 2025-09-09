@@ -20,9 +20,9 @@ const TopNavigation = ({navigation, title, right}) => {
   return (
     <ImageBackground
       // source={require('../../assets/topbar-bg.jpg')}
-      // source={{
-      //   uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR132TBAD0-GhGhN8_2Xr-3obkFd4NzFbk6Hg&s',
-      // }} // <— đặt ảnh của bạn ở đây
+      source={{
+        uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR132TBAD0-GhGhN8_2Xr-3obkFd4NzFbk6Hg&s',
+      }} // <— đặt ảnh của bạn ở đây
       style={[styles.container, {height: H}]}
       imageStyle={styles.bgImage}
       blurRadius={Platform.OS === 'ios' ? 16 : 10} // làm mờ để “nhạt nhạt”

@@ -1,13 +1,7 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  Alert,
-  Button,
-} from 'react-native';
+import {Image, StyleSheet, Text, View, ScrollView, Alert} from 'react-native';
 import React, {useCallback, useState} from 'react';
+import Button from '../../Components/Button';
+import MultiSelect from '../../Components/MultiSelect';
 import ReusableFlatList from '../../Components/List/List';
 import Checkbox from '../../Components/Checkbox';
 import Table from '../../Components/Table';
@@ -23,7 +17,8 @@ import {showInfoToast, showToast} from '../../Components/ToastConfig';
 import ActionMenu from '../../Components/ActionMenu';
 import SwipeableRow from '../../Components/List/Item';
 import {SafeAreaView} from 'react-native-safe-area-context';
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import RichTextEditor from '../../Components/RichTextEditor';
 const HomeSrceen = () => {
   // State cho search input
   const [searchText, setSearchText] = useState('');
@@ -54,6 +49,17 @@ const HomeSrceen = () => {
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [imageViewerIndex, setImageViewerIndex] = useState(0);
   const [dateValue, setDateValue] = useState(new Date());
+  const [multiSelected, setMultiSelected] = useState([]);
+  const multiOptions = [
+    { label: 'Apple', value: 'apple' },
+    { label: 'Banana', value: 'banana' },
+    { label: 'Orange', value: 'orange' },
+    { label: 'Mango', value: 'mango' },
+    { label: 'Grape', value: 'grape' },
+    { label: 'Pineapple', value: 'pineapple' },
+    { label: 'Watermelon', value: 'watermelon' },
+  ];
+  const [richValue, setRichValue] = useState('');
   const imageList = [
     {
       uri: 'https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg',
@@ -129,11 +135,6 @@ const HomeSrceen = () => {
           style={{marginBottom: 16}}
           // onSearch={() => Alert('Tìm: ' + searchText)}
         />
-
-        <Button
-          title="Hiện thông báo info"
-          onPress={() => showToast('info', 'Đây là thông báo info!')}
-        />
         <Text style={styles.sectionTitle}>Checkbox Component</Text>
         <Checkbox
           label="Tôi đồng ý với điều khoản"
@@ -149,7 +150,7 @@ const HomeSrceen = () => {
             ['John', '28', 'Hanoi', '123'],
             ['Anna', '24', 'Saigon', '456'],
             ['Mike', '32', 'Danang', '789'],
-            ['Mike', '', 'Danang', '222'],
+            ['Mike', '11', 'Danang', '222'],
           ]}
         />
 
@@ -218,6 +219,48 @@ const HomeSrceen = () => {
           loadingMore={loadingMore}
           renderItem={renderItem}
           ListEmptyComponent={renderEmpty}
+        />
+
+        {/* Demo Button component mới */}
+        <Text style={styles.sectionTitle}>Button Component</Text>
+        <Button
+          // style={{marginBottom: 12}}
+          title="Primary Button"
+          icon={ <Icon name="check" size={20} color="#fff" />}
+          onPress={() => showToast('success', 'Bạn đã nhấn Primary!', '350 xé đôi')}
+        />
+        <Button
+          title="Secondary Button"
+          variant="secondary"
+          onPress={() => showToast('info', 'Bạn đã nhấn Secondary!')}
+        />
+        <Button
+          title="Outline Button"
+          variant="outline"
+          onPress={() => showToast('info', 'Bạn đã nhấn Outline!')}
+        />
+        <Button
+          title="Danger Button"
+          variant="danger"
+          onPress={() => showToast('error', 'Bạn đã nhấn Danger!')}
+        />
+        <Button title="Loading Button" loading />
+        <Button title="Disabled Button" disabled />
+        {/* MultiSelect mới */}
+        <Text style={styles.sectionTitle}>MultiSelect (Mới)</Text>
+        <MultiSelect
+          options={multiOptions}
+          selected={multiSelected}
+          onChange={setMultiSelected}
+          placeholder="Chọn trái cây..."
+          modalTitle="Chọn nhiều loại trái cây"
+        />
+        {/* RichTextEditor mới */}
+        <Text style={styles.sectionTitle}>RichTextEditor (Mới)</Text>
+        <RichTextEditor
+          value={richValue}
+          onChange={setRichValue}
+          placeholder="Nhập nội dung mô tả..."
         />
         {/* <Loading message="Đang tải dữ liệu..." /> */}
       </ScrollView>

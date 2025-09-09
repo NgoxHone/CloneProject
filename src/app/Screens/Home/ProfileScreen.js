@@ -1,30 +1,60 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  SafeAreaView,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function ProfileScreen() {
   return (
-    <View style={styles.container}>
-      <View style={styles.avatarWrap}>
-        <Ionicons name="person-circle" size={90} color="#74b9ff" />
-        <Text style={styles.name}>Người dùng demo</Text>
-        <Text style={styles.email}>user@email.com</Text>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+      <View style={styles.container}>
+        <View style={styles.avatarWrap}>
+          <Ionicons name="person-circle" size={90} color="#74b9ff" />
+          <Text style={styles.name}>Người dùng demo</Text>
+          <Text style={styles.email}>user@email.com</Text>
+        </View>
+        <View style={styles.menu}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => Alert.alert('Thông tin cá nhân')}>
+            <Ionicons
+              name="person-outline"
+              size={22}
+              color="#636e72"
+              style={styles.menuIcon}
+            />
+            <Text style={styles.menuText}>Thông tin cá nhân</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => Alert.alert('Đổi mật khẩu')}>
+            <Ionicons
+              name="key-outline"
+              size={22}
+              color="#636e72"
+              style={styles.menuIcon}
+            />
+            <Text style={styles.menuText}>Đổi mật khẩu</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => Alert.alert('Đăng xuất')}>
+            <Ionicons
+              name="log-out-outline"
+              size={22}
+              color="#d63031"
+              style={styles.menuIcon}
+            />
+            <Text style={[styles.menuText, {color: '#d63031'}]}>Đăng xuất</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.menu}>
-        <TouchableOpacity style={styles.menuItem} onPress={() => Alert.alert('Thông tin cá nhân')}>
-          <Ionicons name="person-outline" size={22} color="#636e72" style={styles.menuIcon} />
-          <Text style={styles.menuText}>Thông tin cá nhân</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={() => Alert.alert('Đổi mật khẩu')}>
-          <Ionicons name="key-outline" size={22} color="#636e72" style={styles.menuIcon} />
-          <Text style={styles.menuText}>Đổi mật khẩu</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={() => Alert.alert('Đăng xuất')}>
-          <Ionicons name="log-out-outline" size={22} color="#d63031" style={styles.menuIcon} />
-          <Text style={[styles.menuText, { color: '#d63031' }]}>Đăng xuất</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
