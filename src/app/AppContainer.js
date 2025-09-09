@@ -1,6 +1,6 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import { GlobalModalProvider } from './Common/GlobalModalContext';
+import {GlobalModalProvider} from './Common/GlobalModalContext';
 import GlobalModal from './Common/GlobalModal';
 import {RecoilRoot} from 'recoil';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -9,6 +9,7 @@ import Splash from './Screens/Splash/Splash';
 import {RootNavigation} from './Common/RootNavigation';
 import TabNavigation, {NotificationStack} from './Screens/Home/TabNavigation';
 import NotificationDetailScreen from './Screens/Home/NotificationDetailScreen';
+import DetailScreen from './Screens/Home/DetailScreen';
 
 const AppContainer = () => {
   const [visible, setVisible] = React.useState(false);
@@ -20,6 +21,11 @@ const AppContainer = () => {
         <MainStack.Screen
           name="NotificationDetail"
           component={NotificationDetailScreen}
+          options={{headerShown: false}}
+        />
+        <MainStack.Screen
+          name="DetailScreenExplore"
+          component={DetailScreen}
           options={{headerShown: false}}
         />
       </MainStack.Navigator>

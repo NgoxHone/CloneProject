@@ -1,4 +1,5 @@
 import {Image, StyleSheet, Text, View, ScrollView, Alert} from 'react-native';
+import PushNotificationButton from '../../Components/PushNotificationButton';
 import React, {useCallback, useState} from 'react';
 import Button from '../../Components/Button';
 import MultiSelect from '../../Components/MultiSelect';
@@ -116,6 +117,8 @@ const HomeSrceen = () => {
       <ScrollView
         style={{flex: 1, backgroundColor: '#f8f9fa', marginBottom: 70}}
         contentContainerStyle={{padding: 16}}>
+        {/* Nút test push notification */}
+        <PushNotificationButton />
         <Text style={styles.bigTitle}>Home Screen OTA!</Text>
 
         {/* Thanh tìm kiếm demo */}

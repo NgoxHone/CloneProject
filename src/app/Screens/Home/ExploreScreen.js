@@ -149,25 +149,61 @@ import {MAX_H, MAX_W} from '../../Common/GlobalStyles';
 
 const {width, height} = Dimensions.get('window');
 
-const ExploreScreen = () => {
+const ExploreScreen = ({navigation}) => {
   const featuredContent = [
     {
       id: 1,
-      title: 'Body language with maya daryen',
+      title: 'Body language with Maya Daryen',
       subtitle: '@maya.daryen',
       image:
-        'https://media.istockphoto.com/id/1424208861/photo/beautiful-woman.jpg?s=612x612&w=0&k=20&c=pxbBpBas01Q4qpI24ZmkIZbyuAQ82S9fEl772IK7YVc=',
+        'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZmVtYWxlJTIwbW9kZWxzfGVufDB8fDB8fHww',
       gradient: ['#D4B5A0', '#F5E6D3'],
       creator: 'Maya Daryen',
     },
     {
       id: 2,
-      title: 'Summer bensa collection',
+      title: 'Summer Bensa Collection',
       subtitle: 'collection',
       image:
-        'https://www.mgfilmproductions.com/uploads/1/4/5/8/145812880/389783587_8.jpg',
+        'https://cdn.pixabay.com/photo/2018/01/15/08/34/woman-3083453_1280.jpg',
       gradient: ['#87CEEB', '#E0F6FF'],
       creator: 'Bensa',
+    },
+    {
+      id: 3,
+      title: 'Modern Yoga Flow',
+      subtitle: '@sofia.fit',
+      image:
+        'https://www.top10asia.org/wp-content/uploads/2023/08/top-10-asian-model-1.jpg',
+      gradient: ['#A8E063', '#56AB2F'],
+      creator: 'Sofia Lee',
+    },
+    {
+      id: 4,
+      title: 'Streetwear Essentials',
+      subtitle: '2023 drop',
+      image:
+        'https://models.bestmodelsagency.com/recursos/clientes/7531C6F7-CBDA-4D58-B9C1-45A974C8B77D/list.jpg?v1622126929?202410081559',
+      gradient: ['#FF9A9E', '#FAD0C4'],
+      creator: 'Urban Lab',
+    },
+    {
+      id: 5,
+      title: 'Culinary Art by Marco',
+      subtitle: '@chefmarco',
+      image:
+        'https://imageio.forbes.com/specials-images/imageserve/646e6affb9a2a85595a62c39/0x0.jpg?format=jpg&crop=1573,1574,x239,y256,safe&height=416&width=416&fit=bounds',
+      gradient: ['#F7971E', '#FFD200'],
+      creator: 'Chef Marco',
+    },
+    {
+      id: 6,
+      title: 'Digital Nomad Life',
+      subtitle: '@travelwithmia',
+      image:
+        'https://i.pinimg.com/736x/4a/41/88/4a418880ced24b93d38358678a90af18.jpg',
+      gradient: ['#4facfe', '#00f2fe'],
+      creator: 'Mia Travels',
     },
   ];
 
@@ -199,8 +235,10 @@ const ExploreScreen = () => {
   ];
 
   const renderFeaturedCard = (item, index) => (
-    <View
+    <TouchableOpacity
       key={item.id}
+      activeOpacity={0.85}
+      onPress={() => navigation?.navigate?.('DetailScreenExplore', {item})}
       style={[styles.featuredCard, index === 1 && styles.secondCard]}>
       <LinearGradient
         colors={item.gradient}
@@ -246,7 +284,7 @@ const ExploreScreen = () => {
           </ScrollView>
         </View>
       </LinearGradient>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
