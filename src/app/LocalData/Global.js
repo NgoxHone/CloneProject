@@ -19,4 +19,5 @@ module.exports = {
   globalParams: null,
   UserId: null,
   AppInfomations: null,
+  updateVersionAppName: 'AppDemo',
 };

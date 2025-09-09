@@ -1,4 +1,4 @@
-package com.dulichcamau;
+package com.cloneproject;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
@@ -9,6 +9,14 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
 import java.util.List;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
+import org.jetbrains.annotations.Nullable;
+import com.otahotupdate.OtaHotUpdate;
+
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -33,6 +41,12 @@ public class MainApplication extends Application implements ReactApplication {
           return "index";
         }
 
+        @Nullable
+        @Override
+        protected String getJSBundleFile() {
+            return OtaHotUpdate.Companion.getBundleJS();
+        }
+
         @Override
         protected boolean isNewArchEnabled() {
           return BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
@@ -43,6 +57,24 @@ public class MainApplication extends Application implements ReactApplication {
           return BuildConfig.IS_HERMES_ENABLED;
         }
       };
+
+  @Override
+  public Intent registerReceiver(
+    @Nullable BroadcastReceiver receiver,
+    IntentFilter filter
+  ) {
+    if (
+      Build.VERSION.SDK_INT >= 34 && getApplicationInfo().targetSdkVersion >= 34
+    ) {
+      return super.registerReceiver(
+        receiver,
+        filter,
+        Context.RECEIVER_EXPORTED
+      );
+    } else {
+      return super.registerReceiver(receiver, filter);
+    }
+  }
 
   @Override
   public ReactNativeHost getReactNativeHost() {

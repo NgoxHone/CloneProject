@@ -1,13 +1,37 @@
 # Resolve react_native_pods.rb with node to allow for hoisting
+def node_require(script)
 require Pod::Executable.execute_command('node', ['-p',
-  'require.resolve(
-    "react-native/scripts/react_native_pods.rb",
-    {paths: [process.argv[1]]},
-  )', __dir__]).strip
+     "require.resolve(
+       '#{script}',
+      {paths: [process.argv[1]]},
+     )", __dir__]).strip
+end
 
+
+node_require('react-native/scripts/react_native_pods.rb')
+node_require('react-native-permissions/scripts/setup.rb')
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
-
+setup_permissions([
+  # 'Bluetooth',
+  # 'Calendars',
+  # 'CalendarsWriteOnly',
+  # 'Contacts',
+  # 'FaceID',
+  # 'LocationAccuracy',
+  # 'LocationAlways',
+  # 'LocationWhenInUse',
+  'MediaLibrary',
+  # 'Microphone',
+  # 'Motion',
+  'Notifications',
+  'PhotoLibrary',
+  # 'PhotoLibraryAddOnly',
+  # 'Reminders',
+  # 'Siri',
+  # 'SpeechRecognition',
+  # 'StoreKit',
+])
 # If you are using a `react-native-flipper` your iOS build will fail when `NO_FLIPPER=1` is set.
 # because `react-native-flipper` depends on (FlipperKit,...) that will be excluded
 #
@@ -25,7 +49,7 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-target 'DuLichCaMau' do
+target 'CloneProject' do
   config = use_native_modules!
 
   # Flags change depending on the env values.
@@ -44,11 +68,16 @@ target 'DuLichCaMau' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+  pod 'GoogleUtilities',      :modular_headers => true
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'GoogleAppMeasurement', :modular_headers => true
+  pod 'GoogleDataTransport',  :modular_headers => true
+  pod 'FirebaseCore',         :modular_headers => true
 
-  target 'DuLichCaMauTests' do
-    inherit! :complete
-    # Pods for testing
-  end
+  # target 'DuLichCaMauTests' do
+  #   inherit! :complete
+  #   # Pods for testing
+  # end
 
   post_install do |installer|
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
@@ -58,5 +87,18 @@ target 'DuLichCaMau' do
       :mac_catalyst_enabled => false
     )
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
+    installer.pods_project.targets.each do |target|
+      if target.name == 'Flipper'
+        file_path = 'Pods/Flipper/xplat/Flipper/FlipperTransportTypes.h'
+        contents = File.read(file_path)
+        unless contents.include?('#include <functional>')
+          File.chmod(0755, file_path)
+          File.open(file_path, 'w') do |file|
+            file.puts('#include <functional>')
+            file.puts(contents)
+          end
+        end
+      end
+    end
   end
 end

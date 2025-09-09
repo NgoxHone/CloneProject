@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
+// import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const ReusableFlatList = ({
   data, // Dữ liệu được truyền vào
@@ -20,20 +21,24 @@ const ReusableFlatList = ({
   ListEmptyComponent, // Thành phần hiển thị khi danh sách trống
 }) => {
   return (
-    <FlatList
-      data={data}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={renderItem} // Hàm render item được truyền vào
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-      onEndReached={loadMoreData} // Gọi hàm khi cuộn đến cuối danh sách
-      onEndReachedThreshold={0.5} // Ngưỡng cuộn để tải thêm
-      ListFooterComponent={
-        loadingMore ? <ActivityIndicator size="large" color="#0000ff" /> : null
-      }
-      ListEmptyComponent={ListEmptyComponent} // Thành phần khi danh sách trống
-    />
+    // <GestureHandlerRootView style={{flex: 1}}>
+      <FlatList
+        data={data}
+        keyExtractor={item => item.id.toString()}
+        renderItem={renderItem} // Hàm render item được truyền vào
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        onEndReached={loadMoreData} // Gọi hàm khi cuộn đến cuối danh sách
+        onEndReachedThreshold={0.5} // Ngưỡng cuộn để tải thêm
+        ListFooterComponent={
+          loadingMore ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : null
+        }
+        ListEmptyComponent={ListEmptyComponent} // Thành phần khi danh sách trống
+      />
+    // </GestureHandlerRootView>
   );
 };
 

@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "DuLichCaMau.app"
-               BlueprintName = "DuLichCaMau"
-               ReferencedContainer = "container:DuLichCaMau.xcodeproj">
+               BuildableName = "CloneProject.app"
+               BlueprintName = "CloneProject"
+               ReferencedContainer = "container:CloneProject.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "DuLichCaMauTests.xctest"
-               BlueprintName = "DuLichCaMauTests"
-               ReferencedContainer = "container:DuLichCaMau.xcodeproj">
+               BuildableName = "CloneProjectTests.xctest"
+               BlueprintName = "CloneProjectTests"
+               ReferencedContainer = "container:CloneProject.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "DuLichCaMau.app"
-            BlueprintName = "DuLichCaMau"
-            ReferencedContainer = "container:DuLichCaMau.xcodeproj">
+            BuildableName = "CloneProject.app"
+            BlueprintName = "CloneProject"
+            ReferencedContainer = "container:CloneProject.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "DuLichCaMau.app"
-            BlueprintName = "DuLichCaMau"
-            ReferencedContainer = "container:DuLichCaMau.xcodeproj">
+            BuildableName = "CloneProject.app"
+            BlueprintName = "CloneProject"
+            ReferencedContainer = "container:CloneProject.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
