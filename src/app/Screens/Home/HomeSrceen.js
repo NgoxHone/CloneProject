@@ -20,6 +20,9 @@ import SwipeableRow from '../../Components/List/Item';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RichTextEditor from '../../Components/RichTextEditor';
+import CustomTabView from '../../Components/TabView/TabView';
+import {SceneMap} from 'react-native-tab-view';
+import CollapsibleView from '../../Components/CollapsibleView';
 const HomeSrceen = () => {
   // State cho search input
   const [searchText, setSearchText] = useState('');
@@ -52,15 +55,58 @@ const HomeSrceen = () => {
   const [dateValue, setDateValue] = useState(new Date());
   const [multiSelected, setMultiSelected] = useState([]);
   const multiOptions = [
-    { label: 'Apple', value: 'apple' },
-    { label: 'Banana', value: 'banana' },
-    { label: 'Orange', value: 'orange' },
-    { label: 'Mango', value: 'mango' },
-    { label: 'Grape', value: 'grape' },
-    { label: 'Pineapple', value: 'pineapple' },
-    { label: 'Watermelon', value: 'watermelon' },
+    {label: 'Apple', value: 'apple'},
+    {label: 'Banana', value: 'banana'},
+    {label: 'Orange', value: 'orange'},
+    {label: 'Mango', value: 'mango'},
+    {label: 'Grape', value: 'grape'},
+    {label: 'Pineapple', value: 'pineapple'},
+    {label: 'Watermelon', value: 'watermelon'},
   ];
   const [richValue, setRichValue] = useState('');
+
+  // TabView state và data
+  const tabRoutes = [
+    {key: 'home', title: 'Trang chủ'},
+    {key: 'search', title: 'Tìm kiếm'},
+    {key: 'profile', title: 'Hồ sơ'},
+  ];
+
+  // Render scenes cho TabView
+  const renderTabScene = ({route}) => {
+    switch (route.key) {
+      case 'home':
+        return (
+          <View style={styles.tabScene}>
+            <Icon name="home" size={50} color="#007AFF" />
+            <Text style={styles.tabText}>Trang chủ</Text>
+            <Text style={styles.tabDescription}>
+              Nội dung trang chủ hiển thị ở đây
+            </Text>
+          </View>
+        );
+      case 'search':
+        return (
+          <View style={styles.tabScene}>
+            <Icon name="magnify" size={50} color="#007AFF" />
+            <Text style={styles.tabText}>Tìm kiếm</Text>
+            <Text style={styles.tabDescription}>
+              Chức năng tìm kiếm sẽ được hiển thị ở đây
+            </Text>
+          </View>
+        );
+      case 'profile':
+        return (
+          <View style={styles.tabScene}>
+            <Icon name="account" size={50} color="#007AFF" />
+            <Text style={styles.tabText}>Hồ sơ</Text>
+            <Text style={styles.tabDescription}>Thông tin cá nhân của bạn</Text>
+          </View>
+        );
+      default:
+        return null;
+    }
+  };
   const imageList = [
     {
       uri: 'https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg',
@@ -138,6 +184,73 @@ const HomeSrceen = () => {
           style={{marginBottom: 16}}
           // onSearch={() => Alert('Tìm: ' + searchText)}
         />
+
+        {/* Collapsible View Demo */}
+        <CollapsibleView
+          title="📋 Thông tin chi tiết"
+          initialCollapsed={true}
+          iconColor="#007AFF"
+          backgroundColor="#f0f8ff">
+          <View style={{padding: 16}}>
+            <Text style={styles.sectionTitle}>Nội dung có thể thu gọn</Text>
+            <Text style={{fontSize: 14, color: '#666', marginBottom: 12}}>
+              Đây là một component Collapsible View có thể mở rộng hoặc thu gọn
+              nội dung bên trong.
+            </Text>
+            <View
+              style={{
+                backgroundColor: '#e8f4fd',
+                padding: 12,
+                borderRadius: 8,
+                marginBottom: 12,
+              }}>
+              <Text
+                style={{fontWeight: 'bold', color: '#007AFF', marginBottom: 8}}>
+                🎯 Tính năng chính:
+              </Text>
+              <Text style={{color: '#333', lineHeight: 20}}>
+                • Animation mượt mà{'\n'}• Có thể tùy chỉnh giao diện{'\n'}• Hỗ
+                trợ nội dung bất kỳ{'\n'}• Dễ sử dụng và tích hợp
+              </Text>
+            </View>
+            <Button
+              title="Thử nghiệm"
+              variant="outline"
+              onPress={() =>
+                showToast('success', 'Collapsible View hoạt động!')
+              }
+            />
+          </View>
+        </CollapsibleView>
+
+        <CollapsibleView
+          title="🛠️ Cài đặt nâng cao"
+          initialCollapsed={false}
+          iconColor="#28a745"
+          backgroundColor="#f0fff0">
+          <View style={{padding: 16}}>
+            <Text style={{fontSize: 14, color: '#666', marginBottom: 12}}>
+              Một ví dụ khác với nội dung mở sẵn và màu sắc khác.
+            </Text>
+            <Checkbox
+              label="Bật thông báo"
+              checked={checked}
+              onChange={setChecked}
+              style={{marginBottom: 12}}
+            />
+            <Dropdown
+              options={[
+                {label: 'Tiếng Việt', value: 'vi'},
+                {label: 'English', value: 'en'},
+                {label: '中文', value: 'zh'},
+              ]}
+              selected={dropdownValue}
+              onSelect={setDropdownValue}
+              placeholder="Chọn ngôn ngữ"
+            />
+          </View>
+        </CollapsibleView>
+
         <Text style={styles.sectionTitle}>Checkbox Component</Text>
         <Checkbox
           label="Tôi đồng ý với điều khoản"
@@ -229,8 +342,10 @@ const HomeSrceen = () => {
         <Button
           // style={{marginBottom: 12}}
           title="Primary Button"
-          icon={ <Icon name="check" size={20} color="#fff" />}
-          onPress={() => showToast('success', 'Bạn đã nhấn Primary!', '350 xé đôi')}
+          icon={<Icon name="check" size={20} color="#fff" />}
+          onPress={() =>
+            showToast('success', 'Bạn đã nhấn Primary!', '350 xé đôi')
+          }
         />
         <Button
           title="Secondary Button"
@@ -265,6 +380,21 @@ const HomeSrceen = () => {
           onChange={setRichValue}
           placeholder="Nhập nội dung mô tả..."
         />
+
+        {/* TabView Demo */}
+        <Text style={styles.sectionTitle}>TabView Demo</Text>
+        <View style={styles.tabViewContainer}>
+          <CustomTabView
+            routes={tabRoutes}
+            renderScene={renderTabScene}
+            tabBarProps={{
+              activeColor: '#007AFF',
+              inactiveColor: '#8E8E93',
+              indicatorStyle: {backgroundColor: '#007AFF'},
+              style: {backgroundColor: '#FFFFFF'},
+            }}
+          />
+        </View>
         {/* <Loading message="Đang tải dữ liệu..." /> */}
       </ScrollView>
     </SafeAreaView>
@@ -330,5 +460,32 @@ const styles = StyleSheet.create({
     color: '#888',
     marginTop: 20,
     fontSize: 16,
+  },
+  tabViewContainer: {
+    height: 500,
+    backgroundColor: '#f8f9fa',
+    borderRadius: 10,
+    overflow: 'hidden',
+    marginVertical: 10,
+  },
+  tabScene: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    padding: 20,
+  },
+  tabText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginTop: 15,
+    marginBottom: 10,
+  },
+  tabDescription: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
+    lineHeight: 20,
   },
 });

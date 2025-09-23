@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "469380443157",
+    "project_id": "quangnam-hopkhonggiay",
+    "storage_bucket": "quangnam-hopkhonggiay.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:469380443157:android:fc9b330a852b0adbd0b21c",
+        "android_client_info": {
+          "package_name": "com.cloneproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjkKjD_FNEXsL6cNR7GXcYi1yUYVUQTIA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

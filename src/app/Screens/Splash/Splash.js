@@ -1,48 +1,108 @@
-import {StyleSheet, Text, View, ImageBackground, Animated} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ImageBackground,
+  Animated,
+  Alert,
+} from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import {useRecoilState} from 'recoil';
 import {splashDataState} from './splashState';
-import {getApi} from '../../Api/Api';
 import {MAX_W} from '../../Common/GlobalStyles';
+import {
+  getMenu,
+  getPermission,
+  guestLogin,
+  guestLogin2,
+} from '../../Api/Actions';
+import {showToast} from '../../Components/ToastConfig';
+// import {getApi} from '../../Api/Api'; // ví dụ: nếu cần thêm API khác thì import
+
+const STEP_DURATION = 400; // thời gian animate cho mỗi bước (ms)
 
 const Splash = ({setVisible}) => {
   const [splashData, setSplashData] = useRecoilState(splashDataState);
-  const {loading, data, error} = splashData;
+  const {loading, error} = splashData;
 
   const progress = useRef(new Animated.Value(0)).current;
+  const currentAnimRef = useRef(null);
+
+  // tiện ích animate đến 1 "tỉ lệ" (0..1)
+  const animateTo = (ratio, onEnd) => {
+    if (currentAnimRef.current) {
+      currentAnimRef.current.stop();
+    }
+    const anim = Animated.timing(progress, {
+      toValue: ratio,
+      duration: STEP_DURATION,
+      useNativeDriver: false, // animate width => false
+    });
+    currentAnimRef.current = anim;
+    anim.start(({finished}) => {
+      if (finished && onEnd) onEnd();
+    });
+  };
 
   useEffect(() => {
-    let isMounted = true;
-    setSplashData({loading: true, data: null, error: null});
-    // getApi('/your-api-url')
-    //   .then(response => {
-    //     if (isMounted)
-    //       setSplashData({loading: false, data: response.data, error: null});
-    //   })
-    //   .catch(err => {
-    //     if (isMounted)
-    //       setSplashData({loading: false, data: null, error: err.message});
-    //   });
-    // return () => {
-    //   isMounted = false;
-    // };
-  }, [setSplashData]);
+    let cancelled = false;
 
-  useEffect(() => {
-    // if (!loading && data) {
-    //   setVisible(true);
-    // }
+    const run = async () => {
+      // Khai báo danh sách API theo thứ tự muốn gọi
+      const apiTasks = [
+        () => guestLogin(),
+        () => getPermission(),
+        () => getMenu(),
+      ];
+      const total = apiTasks.length;
+      setSplashData({loading: true, data: null, error: null});
+      progress.setValue(0);
 
-    setTimeout(() => {
-      setVisible(true);
-    }, 1500);
-    Animated.timing(progress, {
-      toValue: 1,
-      duration: 1000,
-      useNativeDriver: false,
-    }).start(() => setVisible(false));
-  }, [loading, data, setVisible, progress]);
+      const results = [];
+      try {
+        for (let i = 0; i < total; i++) {
+          const res = await apiTasks[i]();
+          if (cancelled) return;
 
+          if (!res) {
+            console.log('LOII', res);
+          }
+
+          results.push(res);
+          const done = i + 1;
+          const ratio = done / total;
+          if (done === total) {
+            animateTo(1, () => {
+              if (!cancelled) {
+                setSplashData({loading: false, data: results, error: null});
+                setVisible(true);
+              }
+            });
+          } else {
+            animateTo(ratio);
+          }
+        }
+      } catch (err) {
+        console.log('Splash error:', err);
+        showToast('error', 'Đã có lỗi xảy ra vui lòng thử lại sau!', false);
+        if (cancelled) return;
+        setSplashData({
+          loading: false,
+          data: null,
+          error: err?.message || 'Có lỗi xảy ra',
+        });
+      }
+    };
+
+    run();
+
+    return () => {
+      cancelled = true;
+      if (currentAnimRef.current) currentAnimRef.current.stop();
+      progress.stopAnimation();
+    };
+  }, []);
+  console.log(splashData);
   return (
     <ImageBackground
       // source={require('../../asset/Image/default_image.png')}
@@ -53,7 +113,8 @@ const Splash = ({setVisible}) => {
       resizeMode="cover">
       <View style={styles.overlay}>
         <Text style={styles.title}>Splash</Text>
-        {/* Custom Progress Bar */}
+
+        {/* Progress Bar */}
         <View style={styles.progressBarContainer}>
           <Animated.View
             style={[
@@ -67,8 +128,15 @@ const Splash = ({setVisible}) => {
             ]}
           />
         </View>
+
         {loading && <Text style={styles.loadingText}>Loading...</Text>}
-        {error && <Text style={styles.errorText}>{error}</Text>}
+        {error && (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>
+              {'Hiện tại không thể kết nối đến máy chủ vui lòng thử lại sau'}
+            </Text>
+          </View>
+        )}
       </View>
     </ImageBackground>
   );
@@ -96,6 +164,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     marginBottom: 40,
+    textTransform: 'uppercase',
   },
   progressBarContainer: {
     width: MAX_W * 0.6,
@@ -119,5 +188,20 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 16,
     marginTop: 10,
+  },
+  errorContainer: {
+    backgroundColor: '#FFE6E6', // Màu đỏ nhạt cho nền
+    padding: 10, // Khoảng cách bên trong
+    borderRadius: 8, // Bo góc
+    borderWidth: 0.5, // Viền
+    borderColor: '#FF9999', // Màu viền đỏ nhạt
+    marginVertical: 10, // Khoảng cách trên dưới
+    marginHorizontal: 15, // Khoảng cách trái phải
+  },
+  errorText: {
+    color: '#CC0000', // Màu chữ đỏ đậm để nổi bật
+    fontSize: 14, // Kích thước chữ
+    fontWeight: '500', // Độ đậm chữ
+    textAlign: 'center', // Căn giữa
   },
 });

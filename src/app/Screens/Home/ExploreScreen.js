@@ -1,335 +1,347 @@
-// import React from 'react';
-// import {
-//   View,
-//   Text,
-//   StyleSheet,
-//   Alert,
-//   ScrollView,
-//   SafeAreaView,
-// } from 'react-native';
-// import {useForm, Controller} from 'react-hook-form';
-// import CustomTextInput from '../../Components/CustomTextInput';
-// import Checkbox from '../../Components/Checkbox';
-// import Dropdown from '../../Components/Dropdown';
-// import DateTimePicker from '../../Components/DateTimePicker';
-// import ActionMenu from '../../Components/ActionMenu';
-// import Button from '../../Components/Button';
-
-// const options = [
-//   {label: 'Option 1', value: 'option1'},
-//   {label: 'Option 2', value: 'option2'},
-//   {label: 'Option 3', value: 'option3'},
-// ];
-
-// export default function ExploreScreen() {
-//   const {control, handleSubmit, reset, watch} = useForm({
-//     defaultValues: {
-//       search: '',
-//       agree: false,
-//       dropdown: null,
-//       date: new Date(),
-//     },
-//   });
-
-//   const onSubmit = data => {
-//     Alert.alert('Dữ liệu form', JSON.stringify(data, null, 2));
-//   };
-//   //   console.log('watch', watch());
-//   return (
-//     <ScrollView style={styles.container}>
-//       {/* <SafeAreaView> */}
-//         <Controller
-//           control={control}
-//           name="search"
-//           render={({field: {onChange, value}}) => (
-//             <CustomTextInput
-//               value={value}
-//               onChangeText={onChange}
-//               placeholder="Tìm kiếm..."
-//               isSearch
-//               style={{marginBottom: 16}}
-//             />
-//           )}
-//         />
-//         <Controller
-//           control={control}
-//           name="agree"
-//           render={({field: {onChange, value}}) => (
-//             <Checkbox
-//               label="Tôi đồng ý với điều khoản"
-//               checked={value}
-//               onChange={onChange}
-//               style={{marginBottom: 16}}
-//             />
-//           )}
-//         />
-//         <Controller
-//           control={control}
-//           name="dropdown"
-//           render={({field: {onChange, value}}) => (
-//             <Dropdown
-//               options={options}
-//               selected={value}
-//               onSelect={onChange}
-//               placeholder="Chọn một option"
-//               style={{marginBottom: 16}}
-//               filter
-//             />
-//           )}
-//         />
-//         <Controller
-//           control={control}
-//           name="date"
-//           render={({field: {onChange, value}}) => (
-//             <DateTimePicker
-//               value={value}
-//               onChange={onChange}
-//               mode="date"
-//               label="Chọn ngày"
-//               style={{marginBottom: 16}}
-//             />
-//           )}
-//         />
-//         <ActionMenu
-//           title="Chọn tác vụ"
-//           items={[
-//             {label: 'Thẩm xét (CV)', onPress: () => console.log('CV')},
-//             {label: 'Xét duyệt (P.TP)', onPress: () => console.log('PTP')},
-//             {label: 'Ký duyệt (TP)', onPress: () => console.log('TP')},
-//             {
-//               label: 'Thu hồi',
-//               danger: true,
-//               onPress: () => console.log('Thu hồi'),
-//             },
-//           ]}
-//         />
-//         <Button title="Gửi" onPress={handleSubmit(onSubmit)} />
-//         <Button
-//           title="Reset"
-//           variant="secondary"
-//           onPress={() => reset()}
-//           color="#888"
-//         />
-//       {/* </SafeAreaView> */}
-//     </ScrollView>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     padding: 20,
-//     paddingTop: 40,
-//   },
-//   title: {
-//     fontSize: 22,
-//     fontWeight: 'bold',
-//     marginBottom: 24,
-//     color: '#0984e3',
-//     textAlign: 'center',
-//   },
-// });
-
 import {
-  SafeAreaView,
   StyleSheet,
   Text,
   View,
-  ScrollView,
-  Image,
-  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
   Dimensions,
-  StatusBar,
-  ImageBackground,
 } from 'react-native';
-import React from 'react';
-import LinearGradient from 'react-native-linear-gradient';
-import {MAX_H, MAX_W} from '../../Common/GlobalStyles';
+import React, {useState, useCallback, useEffect, useRef} from 'react';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import TopNavigation from '../../Components/TopNavigation';
+import CustomTextInput from '../../Components/CustomTextInput';
+import ReusableFlatList from '../../Components/List/List';
+import TauItem from '../../Components/TauItem';
+import {
+  getDanhSachTauChayWithPagination,
+  searchTauCa,
+} from '../../Api/TauCaService';
+import {showToast} from '../../Components/ToastConfig';
 
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
-const ExploreScreen = ({navigation}) => {
-  const featuredContent = [
-    {
-      id: 1,
-      title: 'Body language with Maya Daryen',
-      subtitle: '@maya.daryen',
-      image:
-        'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZmVtYWxlJTIwbW9kZWxzfGVufDB8fDB8fHww',
-      gradient: ['#D4B5A0', '#F5E6D3'],
-      creator: 'Maya Daryen',
-    },
-    {
-      id: 2,
-      title: 'Summer Bensa Collection',
-      subtitle: 'collection',
-      image:
-        'https://cdn.pixabay.com/photo/2018/01/15/08/34/woman-3083453_1280.jpg',
-      gradient: ['#87CEEB', '#E0F6FF'],
-      creator: 'Bensa',
-    },
-    {
-      id: 3,
-      title: 'Modern Yoga Flow',
-      subtitle: '@sofia.fit',
-      image:
-        'https://www.top10asia.org/wp-content/uploads/2023/08/top-10-asian-model-1.jpg',
-      gradient: ['#A8E063', '#56AB2F'],
-      creator: 'Sofia Lee',
-    },
-    {
-      id: 4,
-      title: 'Streetwear Essentials',
-      subtitle: '2023 drop',
-      image:
-        'https://models.bestmodelsagency.com/recursos/clientes/7531C6F7-CBDA-4D58-B9C1-45A974C8B77D/list.jpg?v1622126929?202410081559',
-      gradient: ['#FF9A9E', '#FAD0C4'],
-      creator: 'Urban Lab',
-    },
-    {
-      id: 5,
-      title: 'Culinary Art by Marco',
-      subtitle: '@chefmarco',
-      image:
-        'https://imageio.forbes.com/specials-images/imageserve/646e6affb9a2a85595a62c39/0x0.jpg?format=jpg&crop=1573,1574,x239,y256,safe&height=416&width=416&fit=bounds',
-      gradient: ['#F7971E', '#FFD200'],
-      creator: 'Chef Marco',
-    },
-    {
-      id: 6,
-      title: 'Digital Nomad Life',
-      subtitle: '@travelwithmia',
-      image:
-        'https://i.pinimg.com/736x/4a/41/88/4a418880ced24b93d38358678a90af18.jpg',
-      gradient: ['#4facfe', '#00f2fe'],
-      creator: 'Mia Travels',
-    },
-  ];
+const ExploreScreen = () => {
+  // States
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [searchText, setSearchText] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
 
-  const trendingItems = [
-    {
-      id: 1,
-      image:
-        'https://images.unsplash.com/photo-1506629905607-21e2e3d38c96?w=100',
-      isHot: true,
-    },
-    {
-      id: 2,
-      image:
-        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100',
-      isHot: false,
-    },
-    {
-      id: 3,
-      image:
-        'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=100',
-      isHot: false,
-    },
-    {
-      id: 4,
-      image:
-        'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100',
-      isHot: false,
-    },
-  ];
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const pageSize = 20;
 
-  const renderFeaturedCard = (item, index) => (
-    <TouchableOpacity
-      key={item.id}
-      activeOpacity={0.85}
-      onPress={() => navigation?.navigate?.('DetailScreenExplore', {item})}
-      style={[styles.featuredCard, index === 1 && styles.secondCard]}>
-      <LinearGradient
-        colors={item.gradient}
-        style={styles.cardGradient}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 1}}>
-        <View style={styles.cardHeader}>
-          <View style={styles.creatorInfo}>
-            <View style={styles.creatorAvatar}>
-              <Text style={styles.creatorInitial}>{item.creator[0]}</Text>
-            </View>
-            <Text style={styles.creatorName}>{item.creator}</Text>
-          </View>
-          <TouchableOpacity style={styles.followButton}>
-            <Text style={styles.followText}>Follow +</Text>
-          </TouchableOpacity>
-        </View>
+  // Refs for debounce
+  const debounceTimer = useRef(null);
+  const DEBOUNCE_DELAY = 500; // 500ms delay
 
-        <View style={styles.cardContent}>
-          <Image source={{uri: item.image}} style={styles.cardImage} />
-        </View>
+  // Utility function to merge data safely without duplicates
+  const mergeDataSafely = (existingData, newData) => {
+    const existingIds = new Set(existingData.map(item => item.id));
+    const uniqueNewItems = newData.filter(item => !existingIds.has(item.id));
+    return [...existingData, ...uniqueNewItems];
+  };
 
-        <View style={styles.cardFooter}>
-          <Text style={styles.cardTitle}>{item.title}</Text>
-          <Text style={styles.cardSubtitle}>{item.subtitle}</Text>
-        </View>
+  // Safe key extractor with fallback
+  const keyExtractor = (item, index) => {
+    return item.id || item.sQuanLy || `item_${index}_${Date.now()}`;
+  }; // Load initial data
+  useEffect(() => {
+    loadInitialData();
+  }, []);
 
-        <View style={styles.trendingSection}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {trendingItems.map(trending => (
-              <View key={trending.id} style={styles.trendingItem}>
-                <Image
-                  source={{uri: trending.image}}
-                  style={styles.trendingImage}
-                />
-                {trending.isHot && (
-                  <View style={styles.hotBadge}>
-                    <Text style={styles.hotText}>🔥</Text>
-                  </View>
-                )}
-              </View>
-            ))}
-          </ScrollView>
-        </View>
-      </LinearGradient>
-    </TouchableOpacity>
+  // Debug function to check for duplicate keys
+  const checkForDuplicates = dataArray => {
+    const ids = dataArray.map(item => item.id);
+    const uniqueIds = new Set(ids);
+    if (ids.length !== uniqueIds.size) {
+      console.warn(
+        'Duplicate IDs found in data:',
+        ids.length,
+        'vs',
+        uniqueIds.size,
+      );
+      const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
+      console.warn('Duplicate IDs:', [...new Set(duplicates)]);
+    }
+    return dataArray;
+  };
+
+  // Load data function
+  const loadInitialData = async () => {
+    setLoading(true);
+    try {
+      const result = await getDanhSachTauChayWithPagination({
+        page: 1,
+        pageSize,
+      });
+
+      const checkedData = checkForDuplicates(result.items);
+      setData(checkedData);
+      setFilteredData(checkedData);
+      setTotalCount(result.totalCount);
+      setHasMore(result.hasMore);
+      setCurrentPage(1);
+    } catch (error) {
+      console.error('Load initial data error:', error);
+      showToast('error', 'Lỗi', 'Không thể tải dữ liệu');
+    } finally {
+      setLoading(false);
+    }
+  }; // Pull to refresh
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    setSearchText('');
+    setIsSearching(false);
+
+    try {
+      const result = await getDanhSachTauChayWithPagination({
+        page: 1,
+        pageSize,
+      });
+
+      setData(result.items);
+      setFilteredData(result.items);
+      setTotalCount(result.totalCount);
+      setHasMore(result.hasMore);
+      setCurrentPage(1);
+      showToast('success', 'Thành công', 'Đã cập nhật dữ liệu mới');
+    } catch (error) {
+      console.error('Refresh error:', error);
+      showToast('error', 'Lỗi', 'Không thể làm mới dữ liệu');
+    } finally {
+      setRefreshing(false);
+    }
+  }, []);
+
+  const loadMoreData = async () => {
+    if (loadingMore || !hasMore) return;
+    setLoadingMore(true);
+    try {
+      const nextPage = currentPage + 1;
+      const result = await getDanhSachTauChayWithPagination({
+        page: nextPage,
+        pageSize,
+        search: isSearching ? searchText.trim() : '',
+      });
+      if (isSearching) {
+        const newSearchData = mergeDataSafely(filteredData, result.items);
+        setFilteredData(newSearchData);
+        console.log(
+          `Search load more page ${nextPage}: ${result.items.length} new items, total: ${newSearchData.length}`,
+        );
+      } else {
+        const newData = mergeDataSafely(data, result.items);
+        const checkedData = checkForDuplicates(newData);
+        setData(checkedData);
+        setFilteredData(checkedData);
+        console.log(
+          `Loaded page ${nextPage}: ${result.items.length} new items, total: ${checkedData.length}`,
+        );
+      }
+      setHasMore(result.hasMore);
+      setCurrentPage(nextPage);
+    } catch (error) {
+      console.error('Load more error:', error);
+      showToast('error', 'Lỗi', 'Không thể tải thêm dữ liệu');
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  const performSearch = async searchQuery => {
+    if (!searchQuery.trim()) {
+      setIsSearching(false);
+      setFilteredData(data);
+      setSearchLoading(false);
+      return;
+    }
+
+    setSearchLoading(true);
+    setIsSearching(true);
+
+    try {
+      const result = await getDanhSachTauChayWithPagination({
+        page: 1,
+        pageSize,
+        search: searchQuery.trim(),
+      });
+
+      setFilteredData(result.items);
+      setHasMore(result.hasMore);
+      setCurrentPage(1);
+      setTotalCount(result.totalCount);
+      console.log(
+        `Search results for "${searchQuery}": ${result.items.length} items found`,
+      );
+    } catch (error) {
+      console.error('Search error:', error);
+      showToast('error', 'Lỗi', 'Không thể tìm kiếm');
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
+  const handleSearch = text => {
+    setSearchText(text);
+
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    debounceTimer.current = setTimeout(() => {
+      performSearch(text);
+    }, DEBOUNCE_DELAY);
+  };
+
+  const clearSearch = () => {
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+    setSearchText('');
+    setIsSearching(false);
+    setSearchLoading(false);
+    setFilteredData(data);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, []);
+
+  const handleItemPress = item => {
+    Alert.alert(
+      'Chi tiết tàu cá',
+      `Tàu: ${item.tenTau}\nSố đăng ký: ${item.soDangKy}\nChủ tàu: ${item.chuTau_Ten}`,
+      [
+        {text: 'Đóng', style: 'cancel'},
+        {
+          text: 'Xem chi tiết',
+          onPress: () => console.log('Navigate to detail'),
+        },
+      ],
+    );
+  };
+
+  const handleFavorite = item => {
+    showToast(
+      'info',
+      'Yêu thích',
+      `Đã thêm ${item.tenTau} vào danh sách yêu thích`,
+    );
+  };
+
+  const handleDelete = item => {
+    Alert.alert('Xác nhận xóa', `Bạn có chắc muốn xóa ${item.tenTau}?`, [
+      {text: 'Hủy', style: 'cancel'},
+      {
+        text: 'Xóa',
+        style: 'destructive',
+        onPress: () => {
+          const newData = filteredData.filter(i => i.id !== item.id);
+          setFilteredData(newData);
+          showToast('success', 'Thành công', 'Đã xóa tàu cá');
+        },
+      },
+    ]);
+  };
+
+  // Render item
+  const renderItem = ({item}) => (
+    <TauItem
+      item={item}
+      onPress={handleItemPress}
+      onFavorite={handleFavorite}
+      onDelete={handleDelete}
+    />
   );
 
-  return (
-    <ImageBackground
-      style={styles.container}
-      source={{
-        uri: 'https://images.unsplash.com/photo-1557683316-973673baf926?w=1080',
-      }}>
-      {/* Header */}
-      <SafeAreaView style={{flex: 1}}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Today</Text>
-          <View style={styles.hotTag}>
-            <Text style={styles.hotTagText}>Hot 🔥</Text>
-          </View>
+  // Empty component
+  const renderEmpty = () => (
+    <View style={styles.emptyContainer}>
+      <Text style={styles.emptyTitle}>
+        {isSearching ? 'Không tìm thấy kết quả' : 'Danh sách trống'}
+      </Text>
+      <Text style={styles.emptyText}>
+        {isSearching
+          ? `Không có tàu cá nào phù hợp với "${searchText}"`
+          : 'Chưa có dữ liệu tàu cá'}
+      </Text>
+    </View>
+  );
+
+  // Loading component
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <TopNavigation title="Danh sách tàu cá" />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#007AFF" />
+          <Text style={styles.loadingText}>Đang tải dữ liệu...</Text>
         </View>
-
-        <ScrollView
-          style={styles.scrollView}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}>
-          {/* We follow trends section */}
-          <View style={styles.trendsHeader}>
-            <Text style={styles.trendsTitle}>We follow{'\n'}trends</Text>
-            <Text style={styles.trendsSubtitle}>
-              Discover the latest fashion{'\n'}and lifestyle inspirations
-            </Text>
-          </View>
-
-          {/* Featured Cards */}
-          <View style={styles.cardsContainer}>
-            {featuredContent.map((item, index) =>
-              renderFeaturedCard(item, index),
-            )}
-          </View>
-
-          {/* Bottom Navigation Dots */}
-          <View style={styles.navigationDots}>
-            <View style={[styles.dot, styles.activeDot]} />
-            <View style={styles.dot} />
-            <View style={styles.dot} />
-          </View>
-        </ScrollView>
       </SafeAreaView>
-    </ImageBackground>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <TopNavigation title="Danh sách tàu cá" />
+
+      {/* Search Bar */}
+      <View style={styles.searchContainer}>
+        <CustomTextInput
+          value={searchText}
+          onChangeText={handleSearch}
+          placeholder="Tìm kiếm tàu cá, chủ tàu..."
+          isSearch
+          style={styles.searchInput}
+          onClear={clearSearch}
+        />
+        {searchLoading && (
+          <View style={styles.searchLoadingContainer}>
+            <ActivityIndicator size="small" color="#007AFF" />
+            <Text style={styles.searchLoadingText}>Đang tìm kiếm...</Text>
+          </View>
+        )}
+      </View>
+
+      {/* Stats */}
+      <View style={styles.statsContainer}>
+        <Text style={styles.statsText}>
+          {isSearching
+            ? `Tìm thấy ${totalCount} kết quả${
+                searchText ? ` cho "${searchText}"` : ''
+              }`
+            : `Tổng số: ${totalCount.toLocaleString()} tàu cá`}
+        </Text>
+        {hasMore && !isSearching && (
+          <Text style={styles.hasMoreText}>
+            Đang hiển thị {filteredData.length}/{totalCount}
+          </Text>
+        )}
+      </View>
+
+      {/* List */}
+      <ReusableFlatList
+        data={filteredData}
+        renderItem={renderItem}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
+        loadMoreData={loadMoreData}
+        loadingMore={loadingMore}
+        ListEmptyComponent={renderEmpty}
+        keyExtractor={keyExtractor}
+      />
+    </View>
   );
 };
 
@@ -338,185 +350,83 @@ export default ExploreScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#F8F9FA',
+    marginBottom: 70,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 20,
+  searchContainer: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E1E1E1',
   },
-  headerTitle: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fff',
+  searchInput: {
+    marginBottom: 0,
   },
-  hotTag: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-  },
-  hotTagText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingBottom: 100,
-  },
-  trendsHeader: {
-    paddingHorizontal: 20,
-    paddingBottom: 30,
-  },
-  trendsTitle: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 10,
-    lineHeight: 40,
-  },
-  trendsSubtitle: {
-    fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.7)',
-    lineHeight: 20,
-  },
-  cardsContainer: {
-    paddingHorizontal: 20,
-  },
-  featuredCard: {
-    width: width - 40,
-    height: height * 0.7,
-    borderRadius: 25,
-    marginBottom: 20,
-    overflow: 'hidden',
-    elevation: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-  },
-  secondCard: {
-    height: height * 0.6,
-  },
-  cardGradient: {
-    flex: 1,
-    padding: 20,
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  creatorInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  creatorAvatar: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 8,
-  },
-  creatorInitial: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-  creatorName: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  followButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+  statsContainer: {
+    backgroundColor: '#FFFFFF',
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E1E1E1',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  followText: {
-    color: '#000',
-    fontSize: 12,
+  statsText: {
+    fontSize: 14,
     fontWeight: '600',
+    color: '#333',
   },
-  cardContent: {
+  hasMoreText: {
+    fontSize: 12,
+    color: '#666',
+  },
+  searchLoadingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  searchLoadingText: {
+    marginLeft: 8,
+    fontSize: 14,
+    color: '#007AFF',
+    fontStyle: 'italic',
+  },
+  debounceHint: {
+    fontSize: 10,
+    color: '#999',
+    fontStyle: 'italic',
+  },
+  loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 20,
   },
-  cardImage: {
-    width: width * 0.6,
-    height: width * 0.6,
-    borderRadius: width * 0.3,
-    resizeMode: 'cover',
+  loadingText: {
+    marginTop: 12,
+    fontSize: 16,
+    color: '#666',
   },
-  cardFooter: {
-    marginBottom: 20,
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 60,
+    paddingHorizontal: 32,
   },
-  cardTitle: {
-    fontSize: 24,
+  emptyTitle: {
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 5,
+    color: '#333',
+    marginBottom: 8,
+    textAlign: 'center',
   },
-  cardSubtitle: {
+  emptyText: {
     fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.8)',
-  },
-  trendingSection: {
-    marginTop: 10,
-  },
-  trendingItem: {
-    marginRight: 15,
-    position: 'relative',
-  },
-  trendingImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-  },
-  hotBadge: {
-    position: 'absolute',
-    top: -5,
-    right: -5,
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: '#ff4757',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  hotText: {
-    fontSize: 10,
-  },
-  navigationDots: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 30,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    marginHorizontal: 4,
-  },
-  activeDot: {
-    backgroundColor: '#fff',
-    width: 20,
+    color: '#666',
+    textAlign: 'center',
+    lineHeight: 20,
   },
 });

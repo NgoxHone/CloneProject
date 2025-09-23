@@ -9,6 +9,16 @@ export function getApi(url, params = {}, authen = true) {
     },
   });
 }
+
+export function getApi2(url, params = {}, authen = true) {
+  return Axios.get(url, {
+    params: params,
+    headers: {
+      Authorization: authen ? `Bearer ${Global.accessToken}` : '',
+    },
+  });
+}
+
 export function getApiWithAccessToken(url, params = {}, accessToken) {
   return Axios.get(Global.API_URL + url, {
     params: params,

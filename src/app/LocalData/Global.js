@@ -1,6 +1,6 @@
-const devNum = 1;
-const url = ['http://appcsc.csctech.vn:81', 'http://appcsc.csctech.vn:81'];
-const webUrl = ['http://appcsc.csctech.vn:81', 'http://appcsc.csctech.vn:81'];
+const devNum = 0;
+const url = ['https://nongnghiep.csctech.vn', 'http://appcsc.csctech.vn:81'];
+const webUrl = ['https://nongnghiep.csctech.vn', 'http://appcsc.csctech.vn:81'];
 module.exports = {
   PRODUCTION: !__DEV__,
   API_URL: url[devNum],
@@ -20,4 +20,5 @@ module.exports = {
   UserId: null,
   AppInfomations: null,
   updateVersionAppName: 'AppDemo',
+  logAPI: true,
 };

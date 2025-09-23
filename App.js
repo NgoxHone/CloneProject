@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
-  SafeAreaView,
 } from 'react-native';
 import AppContainer from './src/app/AppContainer';
 import HotUpdate from 'react-native-ota-hot-update';
@@ -19,24 +18,11 @@ import {useUpdateVersion} from './src/app/Hooks/useUpdateVersionApp';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {RecoilRoot} from 'recoil';
 import Toast from 'react-native-toast-message';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const {width} = Dimensions.get('window');
 const isSmallScreen = width < 360;
 
-// Hàm throttle để giới hạn tần suất cập nhật
-const throttle = (func, wait) => {
-  let timeout;
-  return (...args) => {
-    if (!timeout) {
-      timeout = setTimeout(() => {
-        timeout = null;
-        func(...args);
-      }, wait);
-    }
-  };
-};
-
-/** ============ Modal cập nhật ============ */
 const UpdateModal = ({
   visible,
   updateInfo,
@@ -136,7 +122,6 @@ const UpdateModal = ({
   );
 };
 
-/** ============ App ============ */
 const App = () => {
   const {
     checkUpdate,
@@ -151,8 +136,6 @@ const App = () => {
 
   const [initialized, setInitialized] = useState(false);
   const [checkingForUpdates, setCheckingForUpdates] = useState(true);
-
-  // Memoize updateInfo để tránh rerender không cần thiết
   const memoizedUpdateInfo = useMemo(
     () => updateInfo,
     [updateInfo?.version, updateInfo?.bundleUrl],
@@ -197,14 +180,15 @@ const App = () => {
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       {canEnterApp ? (
         <>
-          <AppContainer />
-          <Toast />
+          <SafeAreaView
+            style={{flex: 1, backgroundColor: 'white', marginBottom: 0}}>
+            <AppContainer />
+            <Toast />
+          </SafeAreaView>
         </>
       ) : (
         <ImageBackground
-          source={{
-            uri: 'https://png.pngtree.com/thumb_back/fw800/background/20231230/pngtree-web-page-design-enhanced-with-abstract-dot-background-texture-image_13891510.png',
-          }}
+          source={require('./src/asset/Image/default_image.png')}
           style={styles.container}
           resizeMode="cover">
           {!showModal && (
@@ -235,7 +219,6 @@ const App = () => {
 
 export default App;
 
-/** ============ Styles ============ */
 const styles = StyleSheet.create({
   container: {
     flex: 1,

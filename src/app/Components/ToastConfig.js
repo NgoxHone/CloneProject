@@ -52,16 +52,15 @@ const toastConfig = {
   ),
 };
 
-// Hàm hiển thị toast
-const showToast = (type, message, message2) => {
+const showToast = (type, message, message2, hide = true) => {
   Toast.show({
     type: type,
     text1: message,
     text2: message2,
     position: 'top',
-    visibilityTime: 3000, // Lâu hơn trên tablet
+    visibilityTime: 3000,
     autoHide: true,
-    topOffset: 60, // Dịch lên cao hơn một chút trên tablet
+    topOffset: 60,
     queue: true,
   });
 };

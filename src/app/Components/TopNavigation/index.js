@@ -19,27 +19,24 @@ const TopNavigation = ({navigation, title, right}) => {
 
   return (
     <ImageBackground
-      // source={require('../../assets/topbar-bg.jpg')}
       source={{
         uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR132TBAD0-GhGhN8_2Xr-3obkFd4NzFbk6Hg&s',
-      }} // <— đặt ảnh của bạn ở đây
+      }}
       style={[styles.container, {height: H}]}
       imageStyle={styles.bgImage}
-      blurRadius={Platform.OS === 'ios' ? 16 : 10} // làm mờ để “nhạt nhạt”
-    >
-      {/* overlay để chữ/icon nổi bật hơn trên nền ảnh */}
+      blurRadius={Platform.OS === 'ios' ? 16 : 10}>
       <View style={[StyleSheet.absoluteFill, styles.overlay]} />
-
       <View style={[styles.row, {paddingTop: safeArea.top}]}>
         {/* Back */}
-        <TouchableOpacity
-          onPress={() => navigation.goBack?.()}
-          activeOpacity={0.7}
-          style={styles.BtnBack}
-          hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}>
-          <Ionicons name="arrow-back" size={22} color="#2F2F2F" />
-        </TouchableOpacity>
-
+        {navigation && (
+          <TouchableOpacity
+            onPress={() => navigation.goBack?.()}
+            activeOpacity={0.7}
+            style={styles.BtnBack}
+            hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}>
+            <Ionicons name="arrow-back" size={22} color="#2F2F2F" />
+          </TouchableOpacity>
+        )}
         {/* Title ở giữa */}
         <Text numberOfLines={1} style={styles.title}>
           {title}
@@ -72,7 +69,7 @@ const styles = StyleSheet.create({
   },
   // Lớp phủ rất mỏng để đảm bảo độ tương phản
   overlay: {
-    backgroundColor: 'rgba(255,255,255,0.35)', // nếu ảnh tối, đổi thành 'rgba(0,0,0,0.2)'
+    backgroundColor: 'rgba(0,0,0,0.1)', // nếu ảnh tối, đổi thành 'rgba(0,0,0,0.2)'
   },
   row: {
     flexDirection: 'row',

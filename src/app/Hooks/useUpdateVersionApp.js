@@ -121,11 +121,12 @@ export const useUpdateVersion = () => {
       await HotUpdate.downloadBundleUri(ReactNativeBlobUtil, url, version, {
         updateSuccess: async () => {
           const current = await HotUpdate.getCurrentVersion();
-          Alert.alert('Cập nhật thành công', `Khởi động lại app (${current})`);
-          setTimeout(() => HotUpdate.resetApp(), 1000);
+          // Alert.alert('Cập nhật thành công', `Khởi động lại app (${current})`);
+          setShowModal(false);
+          setTimeout(() => HotUpdate.resetApp(), 500);
         },
         updateFail: error => {
-          Alert.alert('Lỗi', error.message || 'Không thể cài bản cập nhật');
+          // Alert.alert('Lỗi', error.message || 'Không thể cài bản cập nhật');
         },
         restartAfterInstall: true,
         progress: (received, total) => {
@@ -134,7 +135,7 @@ export const useUpdateVersion = () => {
         },
       });
     } catch (error) {
-      Alert.alert('Lỗi', error.message || 'Không thể tải bản cập nhật');
+      // Alert.alert('Lỗi', error.message || 'Không thể tải bản cập nhật');
     } finally {
       setIsLoading(false);
     }

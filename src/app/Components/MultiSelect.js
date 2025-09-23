@@ -1,4 +1,5 @@
 import React, {useState, useMemo} from 'react';
+import CheckBox from '@react-native-community/checkbox';
 import {
   Modal,
   View,
@@ -51,11 +52,16 @@ const MultiSelect = ({
     }
   };
 
-  // Checkbox component đơn giản
-  const CheckBox = ({checked}) => (
-    <View style={[styles.checkbox, checked && styles.checkboxChecked]}>
-      {checked && <Text style={styles.checkboxTick}>✓</Text>}
-    </View>
+  // Checkbox component sử dụng @react-native-community/checkbox
+  const MyCheckbox = ({checked, onValueChange, style, disabled}) => (
+    <CheckBox
+      // animationDuration={200}
+      value={checked}
+      onValueChange={onValueChange}
+      disabled={disabled}
+      tintColors={{true: '#007AFF', false: '#bbb'}}
+      style={[styles.checkbox, style]}
+    />
   );
 
   // Check all logic
@@ -73,16 +79,18 @@ const MultiSelect = ({
   };
 
   const renderOption = ({item}) => (
-    <TouchableOpacity
+    <View
       style={[
         styles.option,
         optionStyle,
         selected.includes(item.value) && [styles.selected, selectedStyle],
-      ]}
-      onPress={() => toggleSelect(item.value)}>
-      <CheckBox checked={selected.includes(item.value)} />
+      ]}>
+      <MyCheckbox
+        checked={selected.includes(item.value)}
+        onValueChange={() => toggleSelect(item.value)}
+      />
       <Text style={{flex: 1, marginLeft: 8}}>{item.label}</Text>
-    </TouchableOpacity>
+    </View>
   );
 
   return (
@@ -121,10 +129,11 @@ const MultiSelect = ({
               autoFocus
             />
             {/* Check all */}
-            <TouchableOpacity
-              style={[styles.option, {marginBottom: 4}]}
-              onPress={toggleSelectAll}>
-              <CheckBox checked={isAllChecked} />
+            <View style={[styles.option, {marginBottom: 4}]}>
+              <MyCheckbox
+                checked={isAllChecked}
+                onValueChange={toggleSelectAll}
+              />
               <Text style={{flex: 1, marginLeft: 8, fontWeight: 'bold'}}>
                 {isAllChecked ? 'Bỏ chọn tất cả' : 'Chọn tất cả'}
               </Text>
@@ -133,7 +142,7 @@ const MultiSelect = ({
                   Đã chọn: {selected.length}
                 </Text>
               )}
-            </TouchableOpacity>
+            </View>
             <ScrollView style={{maxHeight: 300}}>
               <FlatList
                 data={filteredOptions}
@@ -202,22 +211,7 @@ const styles = StyleSheet.create({
   checkbox: {
     width: 20,
     height: 20,
-    borderRadius: 4,
-    borderWidth: 1.5,
-    borderColor: '#bbb',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-  },
-  checkboxChecked: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
-  },
-  checkboxTick: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 14,
-    lineHeight: 18,
+    marginRight: 4,
   },
   selected: {
     backgroundColor: '#e6f0ff',
