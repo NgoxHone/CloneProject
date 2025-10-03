@@ -14,11 +14,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Feather';
 
 // Import your screens
-import HomeSrceen from './HomeSrceen';
+import HomeSrceen from './Demo';
 import LoginScreen from '../Login/LoginScreen';
 import NotificationScreen from './NotificationScreen';
 import ProfileScreen from './ProfileScreen';
 import ExploreScreen from './ExploreScreen';
+import DemoScreen from './Demo';
+import HomeScreen from './HomeScreen';
 
 // Animated Tab Icon Component
 const AnimatedTabIcon = ({focused, icon, label}) => {
@@ -157,7 +159,7 @@ export default function TabNavigation() {
       }}>
       <Tab.Screen
         name="HomeNavigation"
-        component={HomeSrceen}
+        component={HomeScreen}
         options={{
           tabBarLabel: 'Trang chủ',
           tabBarIcon: ({focused}) => (
@@ -181,7 +183,7 @@ export default function TabNavigation() {
       />
       <Tab.Screen
         name="NotificationScreen"
-        component={NotificationScreen}
+        component={DemoScreen}
         options={{
           tabBarLabel: 'Thông báo',
           tabBarIcon: ({focused}) => (

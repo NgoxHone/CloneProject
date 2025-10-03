@@ -23,7 +23,8 @@ import RichTextEditor from '../../Components/RichTextEditor';
 import CustomTabView from '../../Components/TabView/TabView';
 import {SceneMap} from 'react-native-tab-view';
 import CollapsibleView from '../../Components/CollapsibleView';
-const HomeSrceen = () => {
+import Swiper from 'react-native-swiper';
+const DemoScreen = () => {
   // State cho search input
   const [searchText, setSearchText] = useState('');
   // Demo data cho FlatList cũ
@@ -114,6 +115,30 @@ const HomeSrceen = () => {
     {uri: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb'},
     {uri: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca'},
   ];
+
+  // Demo data cho Swiper
+  const swiperData = [
+    {
+      uri: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
+      title: 'Thiên nhiên tuyệt đẹp',
+      description: 'Khám phá vẻ đẹp của thiên nhiên hoang dã',
+    },
+    {
+      uri: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e',
+      title: 'Núi non hùng vĩ',
+      description: 'Những đỉnh núi cao vút đến tận mây xanh',
+    },
+    {
+      uri: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e',
+      title: 'Rừng cây xanh mướt',
+      description: 'Hành trình khám phá khu rừng nhiệt đới',
+    },
+    {
+      uri: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29',
+      title: 'Bình minh tuyệt đẹp',
+      description: 'Khoảnh khắc hoàng hôn lãng mạn trên biển',
+    },
+  ];
   console.log('dropdown', dropdownValue);
   const onRefresh = useCallback(() => {
     // setRefreshing(true);
@@ -159,9 +184,9 @@ const HomeSrceen = () => {
   );
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#f8f9fa'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <ScrollView
-        style={{flex: 1, backgroundColor: '#f8f9fa', marginBottom: 70}}
+        style={{flex: 1, backgroundColor: '#fff', marginBottom: 70}}
         contentContainerStyle={{padding: 16}}>
         {/* Nút test push notification */}
         <PushNotificationButton />
@@ -250,6 +275,85 @@ const HomeSrceen = () => {
             />
           </View>
         </CollapsibleView>
+
+        {/* Swiper Demo */}
+        <Text style={styles.sectionTitle}>Swiper Component (Library)</Text>
+        
+        {/* Swiper với Auto Play */}
+        <View style={{marginBottom: 20}}>
+          <View style={styles.swiperContainer}>
+            <Swiper
+              style={styles.wrapper}
+              showsButtons={false}
+              autoplay={true}
+              autoplayTimeout={4}
+              showsPagination={true}
+              dot={<View style={styles.swiperDot} />}
+              activeDot={<View style={styles.swiperActiveDot} />}
+              paginationStyle={styles.swiperPagination}>
+              {swiperData.map((item, index) => (
+                <View key={index} style={styles.slide}>
+                  <Image source={{uri: item.uri}} style={styles.swiperImage} />
+                  <View style={styles.swiperOverlay}>
+                    <Text style={styles.swiperTitle}>{item.title}</Text>
+                    <Text style={styles.swiperDescription}>{item.description}</Text>
+                  </View>
+                </View>
+              ))}
+            </Swiper>
+          </View>
+        </View>
+
+        {/* Swiper với Buttons */}
+        <View style={{marginBottom: 20}}>
+          <Text style={styles.subTitle}>🎯 Manual Control Swiper</Text>
+          <View style={styles.swiperContainer2}>
+            <Swiper
+              style={styles.wrapper}
+              showsButtons={true}
+              autoplay={false}
+              showsPagination={true}
+              buttonWrapperStyle={styles.buttonWrapper}
+              nextButton={<Text style={styles.buttonText}>›</Text>}
+              prevButton={<Text style={styles.buttonText}>‹</Text>}
+              dot={<View style={styles.swiperDot} />}
+              activeDot={<View style={styles.swiperActiveDot} />}>
+              {imageList.map((img, index) => (
+                <View key={index} style={styles.slide}>
+                  <Image source={{uri: img.uri}} style={styles.swiperImage} />
+                  <View style={styles.slideNumber}>
+                    <Text style={styles.slideNumberText}>Slide {index + 1}</Text>
+                  </View>
+                </View>
+              ))}
+            </Swiper>
+          </View>
+        </View>
+
+        {/* Swiper với Custom Style */}
+        <View style={{marginBottom: 20}}>
+          <Text style={styles.subTitle}>🎨 Custom Style Swiper</Text>
+          <View style={styles.swiperContainer3}>
+            <Swiper
+              style={styles.wrapper}
+              showsButtons={false}
+              autoplay={true}
+              autoplayTimeout={3}
+              showsPagination={true}
+              loop={true}
+              dot={<View style={styles.customDot} />}
+              activeDot={<View style={styles.customActiveDot} />}
+              paginationStyle={{bottom: 10}}>
+              {['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4'].map((color, index) => (
+                <View key={index} style={[styles.customSlide, {backgroundColor: color}]}>
+                  <Icon name="star" size={40} color="#fff" />
+                  <Text style={styles.customSlideText}>Slide {index + 1}</Text>
+                  <Text style={styles.customSlideDesc}>Beautiful custom design</Text>
+                </View>
+              ))}
+            </Swiper>
+          </View>
+        </View>
 
         <Text style={styles.sectionTitle}>Checkbox Component</Text>
         <Checkbox
@@ -401,7 +505,7 @@ const HomeSrceen = () => {
   );
 };
 
-export default HomeSrceen;
+export default DemoScreen;
 
 const styles = StyleSheet.create({
   bigTitle: {
@@ -417,6 +521,153 @@ const styles = StyleSheet.create({
     marginTop: 18,
     marginBottom: 8,
     color: '#0984e3',
+  },
+  subTitle: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 8,
+    color: '#636e72',
+  },
+  customSlide: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+  },
+  customSlideText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginTop: 10,
+  },
+  customSlideDesc: {
+    fontSize: 14,
+    color: '#fff',
+    opacity: 0.9,
+    marginTop: 5,
+  },
+  // Swiper Library Styles
+  swiperContainer: {
+    height: 250,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  swiperContainer2: {
+    height: 200,
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  swiperContainer3: {
+    height: 150,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  wrapper: {},
+  slide: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  swiperImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  swiperOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    padding: 15,
+  },
+  swiperTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 5,
+  },
+  swiperDescription: {
+    fontSize: 14,
+    color: '#fff',
+    opacity: 0.9,
+  },
+  slideNumber: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 15,
+  },
+  slideNumberText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  swiperDot: {
+    backgroundColor: 'rgba(255,255,255,0.4)',
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginLeft: 3,
+    marginRight: 3,
+    marginTop: 3,
+    marginBottom: 3,
+  },
+  swiperActiveDot: {
+    backgroundColor: '#fff',
+    width: 20,
+    height: 8,
+    borderRadius: 4,
+    marginLeft: 3,
+    marginRight: 3,
+    marginTop: 3,
+    marginBottom: 3,
+  },
+  swiperPagination: {
+    bottom: 15,
+  },
+  buttonWrapper: {
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    flex: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  buttonText: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#fff',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    textAlign: 'center',
+    lineHeight: 38,
+  },
+  customDot: {
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginLeft: 3,
+    marginRight: 3,
+  },
+  customActiveDot: {
+    backgroundColor: '#fff',
+    width: 24,
+    height: 10,
+    borderRadius: 5,
+    marginLeft: 3,
+    marginRight: 3,
   },
   demoImage: {width: '100%', height: 180, borderRadius: 10, marginBottom: 8},
   card: {

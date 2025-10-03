@@ -48,107 +48,86 @@ const TauItem = ({item, onPress, onDelete, onFavorite}) => {
       </View>
 
       {/* Thông tin chủ tàu */}
-      <View style={styles.infoRow}>
-        <Icon name="account" size={16} color="#666" />
-        <Text style={styles.infoText} numberOfLines={1}>
-          {item.chuTau_Ten || 'Không có thông tin'}
-        </Text>
-      </View>
 
-      {/* Địa chỉ */}
-      <View style={styles.infoRow}>
-        <Icon name="map-marker" size={16} color="#666" />
-        <Text style={styles.infoText} numberOfLines={2}>
-          {item.chuTau_DiaChiFull || item.chuTau_DiaChi || 'Không có địa chỉ'}
-        </Text>
-      </View>
-
-      {/* Thông tin kỹ thuật */}
-      <View style={styles.techInfoContainer}>
-        <View style={styles.techInfoItem}>
-          <Text style={styles.techLabel}>Loại tàu</Text>
-          <Text style={styles.techValue}>{item.loaiTau || 'N/A'}</Text>
-        </View>
-        <View style={styles.techInfoItem}>
-          <Text style={styles.techLabel}>Chiều dài</Text>
-          <Text style={styles.techValue}>
-            {item.chieuDai_Lmax ? `${item.chieuDai_Lmax}m` : 'N/A'}
+      <CollapsibleView
+        title="Thông tin chi tiết"
+        initialCollapsed={true}
+        iconColor="#007AFF"
+        backgroundColor="#f0f8ff"
+        borderColor="#f0f8ff">
+        <View style={styles.infoRow}>
+          <Icon name="account" size={16} color="#666" />
+          <Text style={styles.infoText} numberOfLines={1}>
+            {item.chuTau_Ten || 'Không có thông tin'}
           </Text>
         </View>
-        <View style={styles.techInfoItem}>
-          <Text style={styles.techLabel}>Dung tích</Text>
-          <Text style={styles.techValue}>
-            {formatTongDungTich(item.tongDungTich_GT)}
+
+        {/* Địa chỉ */}
+        <View style={styles.infoRow}>
+          <Icon name="map-marker" size={16} color="#666" />
+          <Text style={styles.infoText} numberOfLines={2}>
+            {item.chuTau_DiaChiFull || item.chuTau_DiaChi || 'Không có địa chỉ'}
           </Text>
         </View>
-      </View>
 
-      {/* Máy tàu */}
-      {item.danhSachMayTau && item.danhSachMayTau.length > 0 && (
-        <View style={styles.engineInfo}>
-          <Icon name="engine" size={16} color="#666" />
-          <Text style={styles.engineText}>
-            {item.danhSachMayTau[0].hangMay || 'N/A'} -
-            {formatCongSuat(item.danhSachMayTau[0].congSuatCV)}
-          </Text>
-        </View>
-      )}
-
-      {/* Footer */}
-      <View style={styles.footer}>
-        <View style={styles.footerLeft}>
-          <Text style={styles.dateText}>
-            Đăng ký: {formatDate(item.ngayDangKy)}
-          </Text>
-          {item.chuTau_DienThoai && (
-            <Text style={styles.phoneText}>
-              <Icon name="phone" size={14} color="#007AFF" />{' '}
-              {item.chuTau_DienThoai}
+        {/* Thông tin kỹ thuật */}
+        <View style={styles.techInfoContainer}>
+          <View style={styles.techInfoItem}>
+            <Text style={styles.techLabel}>Loại tàu</Text>
+            <Text style={styles.techValue}>{item.loaiTau || 'N/A'}</Text>
+          </View>
+          <View style={styles.techInfoItem}>
+            <Text style={styles.techLabel}>Chiều dài</Text>
+            <Text style={styles.techValue}>
+              {item.chieuDai_Lmax ? `${item.chieuDai_Lmax}m` : 'N/A'}
             </Text>
-          )}
-        </View>
-        <View style={styles.footerRight}>
-          <View
-            style={[
-              styles.statusBadge,
-              item.isActive ? styles.activeBadge : styles.inactiveBadge,
-            ]}>
-            <Text
-              style={[
-                styles.statusText,
-                item.isActive ? styles.activeText : styles.inactiveText,
-              ]}>
-              {item.isActive ? 'Hoạt động' : 'Không hoạt động'}
+          </View>
+          <View style={styles.techInfoItem}>
+            <Text style={styles.techLabel}>Dung tích</Text>
+            <Text style={styles.techValue}>
+              {formatTongDungTich(item.tongDungTich_GT)}
             </Text>
           </View>
         </View>
-      </View>
-      <CollapsibleView
-        title="📋 Thông tin chi tiết"
-        initialCollapsed={true}
-        iconColor="#007AFF"
-        backgroundColor="#f0f8ff">
-        <View style={{padding: 16}}>
-          <Text style={styles.sectionTitle}>Nội dung có thể thu gọn</Text>
-          <Text style={{fontSize: 14, color: '#666', marginBottom: 12}}>
-            Đây là một component Collapsible View có thể mở rộng hoặc thu gọn
-            nội dung bên trong.
-          </Text>
-          <View
-            style={{
-              backgroundColor: '#e8f4fd',
-              padding: 12,
-              borderRadius: 8,
-              marginBottom: 12,
-            }}>
-            <Text
-              style={{fontWeight: 'bold', color: '#007AFF', marginBottom: 8}}>
-              🎯 Tính năng chính:
+
+        {/* Máy tàu */}
+        {item.danhSachMayTau && item.danhSachMayTau.length > 0 && (
+          <View style={styles.engineInfo}>
+            <Icon name="engine" size={16} color="#666" />
+            <Text style={styles.engineText}>
+              {item.danhSachMayTau[0].hangMay || 'N/A'} -
+              {formatCongSuat(item.danhSachMayTau[0].congSuatCV)}
             </Text>
-            <Text style={{color: '#333', lineHeight: 20}}>
-              • Animation mượt mà{'\n'}• Có thể tùy chỉnh giao diện{'\n'}• Hỗ
-              trợ nội dung bất kỳ{'\n'}• Dễ sử dụng và tích hợp
+          </View>
+        )}
+
+        {/* Footer */}
+        <View style={styles.footer}>
+          <View style={styles.footerLeft}>
+            <Text style={styles.dateText}>
+              Đăng ký: {formatDate(item.ngayDangKy)}
             </Text>
+            {item.chuTau_DienThoai && (
+              <Text style={styles.phoneText}>
+                <Icon name="phone" size={14} color="#007AFF" />{' '}
+                {item.chuTau_DienThoai}
+              </Text>
+            )}
+          </View>
+          <View style={styles.footerRight}>
+            <View
+              style={[
+                styles.statusBadge,
+                item.isActive ? styles.activeBadge : styles.inactiveBadge,
+              ]}>
+              <Text
+                style={[
+                  styles.statusText,
+                  item.isActive ? styles.activeText : styles.inactiveText,
+                ]}>
+                {item.isActive ? 'Hoạt động' : 'Không hoạt động'}
+              </Text>
+            </View>
           </View>
         </View>
       </CollapsibleView>
